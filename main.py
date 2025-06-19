@@ -26,4 +26,13 @@ def get_ip():
         return {"message": f"Your public IP address is: {pub_ip}"}
     except:
         return {"message": "Error fetching public IP"}
-        
+# Tugs's task
+@app.get("/cpuLoadAverage")
+def cpu_t():
+    try:
+        load_ave = os.getloadavg()
+        print(f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}")
+        return f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}"
+    except:
+        print("Try again")
+        return "it should be good"        
