@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import shutil
+import os
 
 app = FastAPI()
 
@@ -16,21 +18,17 @@ def create_user(user: UserData):
     print(user.name, user.age)
     return {"message": f"Hello, {user.name}!"}
 
-# check_disk_usage(path) Meerim
+# Meerim's task  check_disk_usage(path)
 
-import shutil
-import os
-
-@app.post("/disk-usage/")
-
-def check_disk_usage(data: PathRequest):
-    path = data.path
+@app.get("/disk-usage/")
+def check_disk_usage(path: str):
     if not os.path.exists(path):
-        raise HTTPException(status_code=404, detail="Path does not exist")
+        raise HTTPException("Path does not exist")
+    
     total, used, free = shutil.disk_usage(path)
     return {
         "path": path,
         "total_GB": round(total / (2**30), 2),
         "used_GB": round(used / (2**30), 2),
         "free_GB": round(free / (2**30), 2)
-        }
+    }
