@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from uuid import uuid4
-from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
@@ -9,9 +8,6 @@ class UserData(BaseModel):
     name: str
     age: int
 
-@app.get("/", response_class=HTMLResponse)
-def homepage():
-    return "<h1>Welcome to my app!</h1><p1>Salam aleykum</p1>"
 
 @app.get("/hello")
 def hello():
