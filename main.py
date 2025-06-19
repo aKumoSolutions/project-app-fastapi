@@ -19,5 +19,8 @@ def create_user(user: UserData):
 
 @app.get('/generate_uuid/')
 def generate_uuid():
-    generated_uuid = uuid4()
-    return {"new_uuid": generated_uuid}
+    try:
+        generated_uuid = uuid4()
+        return {"new_uuid": generated_uuid}
+    except:
+        return {"message": "Error generating UUID"}
