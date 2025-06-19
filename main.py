@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from uuid import uuid4
 
 app = FastAPI()
 
 class UserData(BaseModel):
     name: str
     age: int
-
+    
 @app.get("/hello")
 def hello():
     return {"message": "Hello, world!"}
@@ -15,3 +16,8 @@ def hello():
 def create_user(user: UserData):
     print(user.name, user.age)
     return {"message": f"Hello, {user.name}!"}
+
+@app.get('/generate_uuid/')
+def generate_uuid():
+    generated_uuid = uuid4()
+    return {"new_uuid": generated_uuid}
