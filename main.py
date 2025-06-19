@@ -10,7 +10,7 @@ class UserData(BaseModel):
     age: int
 
 class ListDirInput(BaseModel):
-    path: str
+    input: str
 
 @app.get("/hello")
 def hello():
@@ -25,10 +25,13 @@ def create_user(user: UserData):
 @app.post("/listdir")
 def list_dir(path: ListDirInput):
     try:
-        files = os.listdir(path.path)  
+        files = os.listdir(path.input)  
         return {"files": files} 
     except:
-        return{"There is some error, try again"}
+        return {
+            "Error": "There is some error, try again"
+        }
+
 
 # Jonathan's Task
 @app.get("/get_public_ip")
