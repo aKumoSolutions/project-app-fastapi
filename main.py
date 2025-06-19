@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import platform
 import subprocess
+import requests
+
 
 app = FastAPI()
 
@@ -29,13 +31,18 @@ def ping_host(hostname: str) -> bool:
             param = '-c'
         command = ['ping', param, '1', hostname]
         result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if result.returncode == 0:
-            print(f"SUCCESS: The server '{hostname}' is working fine.")
-            return True
-        else:
-            print(f"FAILURE: The server '{hostname}' is unreachable.")
-            return False
+        result.returncode == 0:
     except Exception as e:
         print(f"An error occurred in ping_host for '{hostname}': {e}")
         return False
 
+# Jonathan's Task
+@app.get("/get_public_ip")
+def get_ip():
+    try:
+        pub_ip = requests.get('https://api.ipify.org')
+        pub_ip = pub_ip.text
+        return {"message": f"Your public IP address is: {pub_ip}"}
+    except:
+        return {"message": "Error fetching public IP"}
+       
