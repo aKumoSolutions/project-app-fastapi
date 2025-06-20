@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import platform
+import subprocess
 import requests
 from uuid import uuid4
 import os
 from typing import Optional
 import json
+
 
 
 app = FastAPI()
@@ -35,6 +38,25 @@ def create_user(user: UserData):
     print(user.name, user.age)
     return {"message": f"Hello, {user.name}!"}
 
+ # Somon's task
+@app.get('/ping/{hostname}')
+def ping_host(hostname: str) -> bool:
+    try:
+        # -n for Windows, -c for Linux/macOS.
+        if platform.system().lower() == 'windows':
+            param = '-n'
+        else:
+            param = '-c'
+        command = ['ping', param, '1', hostname]
+        result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        result.returncode == 0:
+        if result.returncode == 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        return False
+
 # Yunus's task
 @app.get('/generate_uuid/')
 def generate_uuid():
@@ -63,7 +85,7 @@ def get_ip():
         return {"message": f"Your public IP address is: {pub_ip}"}
     except:
         return {"message": "Error fetching public IP"}
-        
+  
 ## abdul's task
 @app.get("/tasks")
 def list_tasks_data():
