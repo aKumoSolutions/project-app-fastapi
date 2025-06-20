@@ -1,12 +1,16 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
+import os
 
 app = FastAPI()
 
 class UserData(BaseModel):
     name: str
     age: int
+
+class ListDirInput(BaseModel):
+    input: str
 
 @app.get("/hello")
 def hello():
@@ -16,6 +20,18 @@ def hello():
 def create_user(user: UserData):
     print(user.name, user.age)
     return {"message": f"Hello, {user.name}!"}
+
+# Elsu's task
+@app.post("/listdir")
+def list_dir(path: ListDirInput):
+    try:
+        files = os.listdir(path.input)  
+        return {"files": files} 
+    except:
+        return {
+            "Error": "There is some error, try again"
+        }
+
 
 # Jonathan's Task
 @app.get("/get_public_ip")
