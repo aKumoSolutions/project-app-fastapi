@@ -49,7 +49,6 @@ def ping_host(hostname: str) -> bool:
             param = '-c'
         command = ['ping', param, '1', hostname]
         result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        result.returncode == 0:
         if result.returncode == 0:
             return True
         else:
