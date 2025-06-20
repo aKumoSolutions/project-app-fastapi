@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import shutil
+import requests
 import os
 
 app = FastAPI()
@@ -8,6 +8,9 @@ app = FastAPI()
 class UserData(BaseModel):
     name: str
     age: int
+
+class ListDirInput(BaseModel):
+    input: str
 
 @app.get("/hello")
 def hello():
@@ -18,17 +21,25 @@ def create_user(user: UserData):
     print(user.name, user.age)
     return {"message": f"Hello, {user.name}!"}
 
-# Meerim's task  check_disk_usage(path)
+# Elsu's task
+@app.post("/listdir")
+def list_dir(path: ListDirInput):
+    try:
+        files = os.listdir(path.input)  
+        return {"files": files} 
+    except:
+        return {
+            "Error": "There is some error, try again"
+        }
 
-@app.get("/disk-usage/")
-def check_disk_usage(path: str):
-    if not os.path.exists(path):
-        raise HTTPException("Path does not exist")
-    
-    total, used, free = shutil.disk_usage(path)
-    return {
-        "path": path,
-        "total_GB": round(total / (2**30), 2),
-        "used_GB": round(used / (2**30), 2),
-        "free_GB": round(free / (2**30), 2)
-    }
+
+# Jonathan's Task
+@app.get("/get_public_ip")
+def get_ip():
+    try:
+        pub_ip = requests.get('https://api.ipify.org')
+        pub_ip = pub_ip.text
+        return {"message": f"Your public IP address is: {pub_ip}"}
+    except:
+        return {"message": "Error fetching public IP"}
+        
