@@ -27,3 +27,17 @@ def get_ip():
     except:
         return {"message": "Error fetching public IP"}
         
+# Naza's Task - read_log_tail(filepath, lines)
+@app.get("/read_log_tail(filepath, lines)")
+def read_log_tail(filepath: str, lines: int = 5):
+    try:
+        # this opens the file for reading. "r" means read.
+        file = open(filepath, "r") 
+        content = file.readlines()
+        last_lines = content[-lines:]
+        return {"lines": last_lines}
+    except FileNotFoundError:
+        return {"error": "File not found. Check the path."}
+
+
+
