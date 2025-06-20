@@ -7,15 +7,9 @@ from uuid import uuid4
 import os
 from typing import Optional
 import json
-<<<<<<< shah
 import platform
-=======
 
-
-
->>>>>>> main
 app = FastAPI()
-
 class UserData(BaseModel):
     name: str
     age: int
