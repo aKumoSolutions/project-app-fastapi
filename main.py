@@ -2,12 +2,9 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import requests
 import os
-<<<<<<< HEAD
 import shutil
-=======
 from typing import Optional
 import json
->>>>>>> origin/main
 
 app = FastAPI()
 
@@ -58,7 +55,6 @@ def get_ip():
     except:
         return {"message": "Error fetching public IP"}
         
-<<<<<<< HEAD
 # Meerim's task  check_disk_usage(path)
 
 @app.get("/disk-usage/")
@@ -73,7 +69,6 @@ def check_disk_usage(path: str = "/"):
         }
     except FileNotFoundError:
         return {"error": "Path does not exist"}
-=======
 ## abdul's task
 @app.get("/tasks")
 def list_tasks_data():
@@ -105,4 +100,3 @@ def update_task(task_id: str, task: TaskData):
         return {"message": f"Task with id {task_id} updated successfully", "task": tasks[task_id]}
     except Exception as e:
         return {"error": str(e)}
->>>>>>> origin/main
