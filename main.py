@@ -4,7 +4,7 @@ import requests
 import os
 from typing import Optional
 import json
-
+import platform
 app = FastAPI()
 
 class UserData(BaseModel):
@@ -85,3 +85,13 @@ def update_task(task_id: str, task: TaskData):
         return {"message": f"Task with id {task_id} updated successfully", "task": tasks[task_id]}
     except Exception as e:
         return {"error": str(e)}
+
+        # shah's Task
+@app.get("/system_info")
+def system_information():
+    sys_info = {
+        'System information':platform.system(),
+        'Python Version':platform.python_version(),
+        'Architecture': platform.architecture()
+    }
+    return(sys_info)
