@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
+from uuid import uuid4
 import os
 from typing import Optional
 import json
+
 
 app = FastAPI()
 
@@ -33,6 +35,14 @@ def create_user(user: UserData):
     print(user.name, user.age)
     return {"message": f"Hello, {user.name}!"}
 
+# Yunus's task
+@app.get('/generate_uuid/')
+def generate_uuid():
+    try:
+        generated_uuid = uuid4()
+        return {"message": f"Your UUID is: {generated_uuid}"}
+    except:
+        return {"message": "Error generating UUID"}
 # Elsu's task
 @app.post("/listdir")
 def list_dir(path: ListDirInput):
