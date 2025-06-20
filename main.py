@@ -47,7 +47,7 @@ def get_ip():
 # Meerim's task  check_disk_usage(path)
 
 @app.get("/disk-usage/")
-def check_disk_usage(path: str):
+def check_disk_usage(path: str = "/"):
     try:
         total, used, free = shutil.disk_usage(path)
         return {
