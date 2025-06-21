@@ -19,6 +19,7 @@ class ListDirInput(BaseModel):
     input: str
 
 class TaskData(BaseModel):
+    id: Optional[str] = None
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[str] = None
@@ -105,7 +106,7 @@ def check_disk_usage(path: str = "/"):
 @app.get("/tasks")
 def list_tasks_data():
     try:
-        return [TaskData(**tdata) for tdata in tasks.items()]
+        return tasks
     except Exception as e:
         return {"error": str(e)}
 
@@ -114,8 +115,23 @@ def get_task(task_id: str):
     try:
         task = tasks.get(task_id)
         if not task:
-            return {"error": f"Task with id {task_id} not found"}
-        return TaskData(**task)
+            return tasks
+        return task
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/tasks")
+def get_task(task: TaskData):
+    try:
+        if task.id is not None:
+            return {"error": f"Task with task ID {task.id} exists"}
+        else:
+            task.id = str(uuid4())
+            tasks[task.id] = task.model_dump()
+            with open('tasks.json', 'w') as f:
+                f.write(json.dumps(tasks))
+                f.close()
+            return {"message": f"Task with id {task.id} created successfully", "task": tasks[task.id]}
     except Exception as e:
         return {"error": str(e)}
 
@@ -153,4 +169,3 @@ def cpu_t():
     except:
         print("Try again")
         return "it should be good"
-
