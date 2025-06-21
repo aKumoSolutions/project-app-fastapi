@@ -35,7 +35,17 @@ def hello():
 @app.post("/hello")
 def create_user(user: UserData):
     print(user.name, user.age)
-    return {"message": f"Hello, {user.name}!"}
+    return {"message": f"Hello, {user.name}. Your age is {user.age}!"}
+
+
+# Yunus's task 2
+@app.post('/generate_uuid_with_data/')
+def generate_uuid_with_name(user: UserData):
+    generated_uuid = uuid4()
+    return {
+        "message": f"Hello, {user.name}, Your age is {user.age}",
+        "uuid": str(generated_uuid)
+    }
 
  # Somon's task
 @app.get('/ping/{hostname}')
@@ -63,6 +73,7 @@ def generate_uuid():
         return {"message": f"Your UUID is: {generated_uuid}"}
     except:
         return {"message": "Error generating UUID"}
+
 # Elsu's task
 @app.post("/listdir")
 def list_dir(path: ListDirInput):
