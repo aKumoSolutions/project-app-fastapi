@@ -154,3 +154,16 @@ def cpu_t():
         print("Try again")
         return "it should be good"
 
+# Tugs task2
+
+@app.post("/addnum")
+def number(n1: int, n2: int) -> int:
+    try:
+        n1 = 100
+        n2 = 101
+        return n1 + n2
+        print(n1 + n2)
+
+    except ValueError:
+        return
+    print("Enter integer")
