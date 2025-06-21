@@ -9,7 +9,7 @@ import shutil
 from typing import Optional
 import json
 import platform
-
+import httpx
 
 app = FastAPI()
 class UserData(BaseModel):
@@ -176,30 +176,40 @@ def system_information():
 
 
 
-# Meerim's task /status endpoint
+# Meerim's task 
+
+@app.get("/status-ping")
+async def status_ping():
+    return {"message": "pong"}  
 
 @app.get("/status")
-def check_own_status():
+async def check_own_status(request: Request):
+    base_url = str(request.base_url).rstrip("/")
+    health_check_url = f"{base_url}/status-ping"
+
     try:
-        url = "http://159.203.179.160:8000//status-ping"
-        response = requests.get(url)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(health_check_url, timeout=5)
+        if 200 <= response.status_code < 400:
+            return {
+                "url_checked": health_check_url,
+                "status": "active",
+                "status_code": response.status_code
+            }
+        else:
+            return {
+                "url_checked": health_check_url,
+                "status": "inactive",
+                "status_code": response.status_code
+            }
+    except httpx.RequestError as e:
         return {
-            "url_checked": url,
-            "status": "active" if response.status_code == 200 else "inactive",
-            "status_code": response.status_code
-        }
-    except Exception as e:
-        return {
-            "url_checked": url,
+            "url_checked": health_check_url,
             "status": "inactive",
             "error": str(e)
         }
 
-@app.get("/status-ping")
-def status_ping():
-    return {"status": "alive"}
 
- 
 # Tugs's task
 @app.get("/cpuLoadAverage")
 def cpu_t():
