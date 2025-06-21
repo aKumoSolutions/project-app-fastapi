@@ -20,6 +20,7 @@ class ListDirInput(BaseModel):
     input: str
 
 class TaskData(BaseModel):
+    id: Optional[str] = None
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[str] = None
@@ -36,7 +37,20 @@ def hello():
 @app.post("/hello")
 def create_user(user: UserData):
     print(user.name, user.age)
-    return {"message": f"Hello, {user.name}!"}
+    return {"message": f"Hello, {user.name}. Your age is {user.age}!"}
+
+
+# Yunus's task 2
+@app.post('/generate_uuid_with_data/')
+def generate_uuid_with_name(user: UserData):
+    try:
+        generated_uuid = uuid4()
+        return {
+            "message": f"Hello, {user.name}, Your age is {user.age}",
+            "uuid": str(generated_uuid)
+        }
+    except:
+        return {"message": "Error generating UUID and obtaining user data"}
 
  # Somon's task
 @app.get('/ping/{hostname}')
@@ -64,6 +78,7 @@ def generate_uuid():
         return {"message": f"Your UUID is: {generated_uuid}"}
     except:
         return {"message": "Error generating UUID"}
+
 # Elsu's task
 @app.post("/listdir")
 def list_dir(path: ListDirInput):
@@ -106,7 +121,7 @@ def check_disk_usage(path: str = "/"):
 @app.get("/tasks")
 def list_tasks_data():
     try:
-        return [TaskData(**tdata) for tdata in tasks.items()]
+        return tasks
     except Exception as e:
         return {"error": str(e)}
 
@@ -115,8 +130,23 @@ def get_task(task_id: str):
     try:
         task = tasks.get(task_id)
         if not task:
-            return {"error": f"Task with id {task_id} not found"}
-        return TaskData(**task)
+            return tasks
+        return task
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/tasks")
+def get_task(task: TaskData):
+    try:
+        if task.id is not None:
+            return {"error": f"Task with task ID {task.id} exists"}
+        else:
+            task.id = str(uuid4())
+            tasks[task.id] = task.model_dump()
+            with open('tasks.json', 'w') as f:
+                f.write(json.dumps(tasks))
+                f.close()
+            return {"message": f"Task with id {task.id} created successfully", "task": tasks[task.id]}
     except Exception as e:
         return {"error": str(e)}
 
@@ -144,6 +174,7 @@ def system_information():
     }
     return(sys_info)
 
+<<<<<<< HEAD
 
 
 # Meerim's task /status endpoint
@@ -161,3 +192,15 @@ async def check_own_status(request: Request):
             return {"url_checked": base_url, "status": "inactive", "status_code": response.status_code}
     except httpx.RequestError as e:
         return {"url_checked": base_url, "status": "inactive", "error": str(e)}
+=======
+# Tugs's task
+@app.get("/cpuLoadAverage")
+def cpu_t():
+    try:
+        load_ave = os.getloadavg()
+        print(f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}")
+        return f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}"
+    except:
+        print("Try again")
+        return "it should be good"
+>>>>>>> 72b267b691cdd610d8d1464d2d02124bba818bc0
