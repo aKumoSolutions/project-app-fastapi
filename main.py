@@ -41,11 +41,14 @@ def create_user(user: UserData):
 # Yunus's task 2
 @app.post('/generate_uuid_with_data/')
 def generate_uuid_with_name(user: UserData):
-    generated_uuid = uuid4()
-    return {
-        "message": f"Hello, {user.name}, Your age is {user.age}",
-        "uuid": str(generated_uuid)
-    }
+    try:
+        generated_uuid = uuid4()
+        return {
+            "message": f"Hello, {user.name}, Your age is {user.age}",
+            "uuid": str(generated_uuid)
+        }
+    except:
+        return {"message": "Error generating UUID and obtaining user data"}
 
  # Somon's task
 @app.get('/ping/{hostname}')
