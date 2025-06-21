@@ -9,7 +9,7 @@ import shutil
 from typing import Optional
 import json
 import platform
-import httpx
+
 
 app = FastAPI()
 class UserData(BaseModel):
@@ -174,25 +174,32 @@ def system_information():
     }
     return(sys_info)
 
-<<<<<<< HEAD
 
 
 # Meerim's task /status endpoint
 
 @app.get("/status")
-async def check_own_status(request: Request):
-    base_url = str(request.base_url).rstrip("/")
-
+def check_own_status():
     try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(base_url, timeout=5)
-        if 200 <= response.status_code < 400:
-            return {"url_checked": base_url, "status": "active", "status_code": response.status_code}
-        else:
-            return {"url_checked": base_url, "status": "inactive", "status_code": response.status_code}
-    except httpx.RequestError as e:
-        return {"url_checked": base_url, "status": "inactive", "error": str(e)}
-=======
+        url = "http://159.203.179.160:8000//status-ping"
+        response = requests.get(url)
+        return {
+            "url_checked": url,
+            "status": "active" if response.status_code == 200 else "inactive",
+            "status_code": response.status_code
+        }
+    except Exception as e:
+        return {
+            "url_checked": url,
+            "status": "inactive",
+            "error": str(e)
+        }
+
+@app.get("/status-ping")
+def status_ping():
+    return {"status": "alive"}
+
+ 
 # Tugs's task
 @app.get("/cpuLoadAverage")
 def cpu_t():
@@ -203,4 +210,3 @@ def cpu_t():
     except:
         print("Try again")
         return "it should be good"
->>>>>>> 72b267b691cdd610d8d1464d2d02124bba818bc0
