@@ -142,3 +142,15 @@ def system_information():
         'Architecture': platform.architecture()
     }
     return(sys_info)
+
+# Tugs's task
+@app.get("/cpuLoadAverage")
+def cpu_t():
+    try:
+        load_ave = os.getloadavg()
+        print(f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}")
+        return f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}"
+    except:
+        print("Try again")
+        return "it should be good"
+
