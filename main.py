@@ -143,7 +143,6 @@ def system_information():
     }
     return(sys_info)
 
-
 # Tugs's task
 @app.get("/cpuLoadAverage")
 def cpu_t():
@@ -154,3 +153,4 @@ def cpu_t():
     except:
         print("Try again")
         return "it should be good"
+
