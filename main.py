@@ -32,7 +32,6 @@ def list_dir(path: ListDirInput):
             "Error": "There is some error, try again"
         }
 
-
 # Jonathan's Task
 @app.get("/get_public_ip")
 def get_ip():
