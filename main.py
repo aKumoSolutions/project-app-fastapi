@@ -83,6 +83,7 @@ def get_ip():
         return {"message": f"Your public IP address is: {pub_ip}"}
     except:
         return {"message": "Error fetching public IP"}
+
         
 # Meerim's task  check_disk_usage(path)
 
@@ -99,6 +100,7 @@ def check_disk_usage(path: str = "/"):
     except FileNotFoundError:
         return {"error": "Path does not exist"}
   
+
 ## abdul's task
 @app.get("/tasks")
 def list_tasks_data():
