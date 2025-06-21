@@ -5,13 +5,11 @@ import subprocess
 import requests
 from uuid import uuid4
 import os
+import shutil
 from typing import Optional
 import json
 
-
-
 app = FastAPI()
-
 class UserData(BaseModel):
     name: str
     age: int
@@ -96,7 +94,23 @@ def read_log_tail(filepath: str, lines: int = 5):
         return {"lines": last_lines}
     except FileNotFoundError:
         return {"error": "File not found. Check the path."}
+        
+# Meerim's task  check_disk_usage(path)
+
+@app.get("/disk-usage/")
+def check_disk_usage(path: str = "/"):
+    try:
+        total, used, free = shutil.disk_usage(path)
+        return {
+            "path": path,
+            "total_GB": round(total / (2**30), 2),
+            "used_GB": round(used / (2**30), 2),
+            "free_GB": round(free / (2**30), 2)
+        }
+    except FileNotFoundError:
+        return {"error": "Path does not exist"}
   
+
 ## abdul's task
 @app.get("/tasks")
 def list_tasks_data():
@@ -127,4 +141,26 @@ def update_task(task_id: str, task: TaskData):
             f.write(json.dumps(tasks))
         return {"message": f"Task with id {task_id} updated successfully", "task": tasks[task_id]}
     except Exception as e:
+
         return {"error": str(e)}
+
+        # shah's Task
+@app.get("/system_info")
+def system_information():
+    sys_info = {
+        'System information':platform.system(),
+        'Python Version':platform.python_version(),
+        'Architecture': platform.architecture()
+    }
+    return(sys_info)
+
+# Tugs's task
+@app.get("/cpuLoadAverage")
+def cpu_t():
+    try:
+        load_ave = os.getloadavg()
+        print(f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}")
+        return f"Cpu load average last 1 minutes, 5 minutes, 15 minutes: {load_ave}"
+    except:
+        print("Try again")
+        return "it should be good"
