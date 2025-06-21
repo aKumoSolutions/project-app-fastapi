@@ -8,11 +8,9 @@ import os
 import shutil
 from typing import Optional
 import json
-
-
+import platform
 
 app = FastAPI()
-
 class UserData(BaseModel):
     name: str
     age: int
@@ -50,7 +48,6 @@ def ping_host(hostname: str) -> bool:
             param = '-c'
         command = ['ping', param, '1', hostname]
         result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        result.returncode == 0:
         if result.returncode == 0:
             return True
         else:
@@ -133,3 +130,13 @@ def update_task(task_id: str, task: TaskData):
         return {"message": f"Task with id {task_id} updated successfully", "task": tasks[task_id]}
     except Exception as e:
         return {"error": str(e)}
+
+        # shah's Task
+@app.get("/system_info")
+def system_information():
+    sys_info = {
+        'System information':platform.system(),
+        'Python Version':platform.python_version(),
+        'Architecture': platform.architecture()
+    }
+    return(sys_info)
