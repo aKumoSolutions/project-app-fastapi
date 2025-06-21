@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import platform
 import subprocess
@@ -9,6 +9,7 @@ import shutil
 from typing import Optional
 import json
 import platform
+import httpx
 
 app = FastAPI()
 class UserData(BaseModel):
@@ -142,3 +143,21 @@ def system_information():
         'Architecture': platform.architecture()
     }
     return(sys_info)
+
+
+
+# Meerim's task /status endpoint
+
+@app.get("/status")
+async def check_own_status(request: Request):
+    base_url = str(request.base_url).rstrip("/")
+
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(base_url, timeout=5)
+        if 200 <= response.status_code < 400:
+            return {"url_checked": base_url, "status": "active", "status_code": response.status_code}
+        else:
+            return {"url_checked": base_url, "status": "inactive", "status_code": response.status_code}
+    except httpx.RequestError as e:
+        return {"url_checked": base_url, "status": "inactive", "error": str(e)}
