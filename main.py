@@ -8,7 +8,6 @@ import os
 import shutil
 from typing import Optional
 import json
-import platform
 
 app = FastAPI()
 class UserData(BaseModel):
@@ -98,7 +97,18 @@ def get_ip():
         return {"message": f"Your public IP address is: {pub_ip}"}
     except:
         return {"message": "Error fetching public IP"}
-
+        
+# Naza's Task - read_log_tail(filepath, lines)
+@app.get("/read_log_tail(filepath, lines)")
+def read_log_tail(filepath: str, lines: int = 5):
+    try:
+        # this opens the file for reading. "r" means read.
+        file = open(filepath, "r") 
+        content = file.readlines()
+        last_lines = content[-lines:]
+        return {"lines": last_lines}
+    except FileNotFoundError:
+        return {"error": "File not found. Check the path."}
         
 # Meerim's task  check_disk_usage(path)
 
@@ -161,6 +171,7 @@ def update_task(task_id: str, task: TaskData):
             f.write(json.dumps(tasks))
         return {"message": f"Task with id {task_id} updated successfully", "task": tasks[task_id]}
     except Exception as e:
+
         return {"error": str(e)}
 
         # shah's Task
@@ -198,6 +209,3 @@ def number(n1: int, n2: int) -> int:
     except ValueError:
         return
     print("Enter integer")
-
-
-
