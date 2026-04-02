@@ -1,4 +1,4 @@
-name: Deploy to Droplet
+name:  ci
 
 on:
   push:
@@ -9,13 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH and Deploy
-        uses: appleboy/ssh-action@master
-        with: 
-          host: 159.203.179.160
-          username: root
-          key: ${{ secrets.SSHKEY }}
-          script: |
-            cd /root/project-app-fastapi
-            git pull origin main
-            sudo systemctl restart fastapi
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        uses: shahpoorjan/composit-actions-repo/tree/main/docker-build@main
+        with:
+          image-name: fastapi-app
