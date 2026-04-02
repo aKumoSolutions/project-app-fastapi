@@ -13,6 +13,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker Image
-        uses: shahpoorjan/composit-actions-repo/tree/main/docker-build@main
+        uses: shahpoorjan/composit-actions-repo/main/docker-build@main
         with:
           image-name: fastapi-app
