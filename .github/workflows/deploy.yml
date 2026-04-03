@@ -1,20 +1,50 @@
-name:  ci
+name: CI Pipeline
 
 on:
   push:
-    branches: [ shah ]
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker Image
-        uses: shahpoorjan/composit-actions-repo/docker-build@main
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
         with:
-          image-name: fastapi-app
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
 
-  #####
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: echo "Run your tests here"
+
+
+
+
+
+
+# name:  ci
+# on:
+#   push:
+#     branches: [ shah ]
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Build Docker Image
+#         uses: shahpoorjan/composit-actions-repo/docker-build@main
+#         with:
+#           image-name: fastapi-app
+
+#   #####
